@@ -1,10 +1,20 @@
-# flippy
+# Flippy
 
-An Electron application with React and TypeScript
+A cross-plattform desktop app to track your flips in the game Old School RuneScape. Built with Electron, React+shadcn/ui and SQLite.
+
+![A screenshot showcasing the user interface](resources/image.png)
+
+[Download the latest release now!](https://github.com/enginkarakurt/flippy/releases/latest)
+
+## Features
+
+- Free forever
+- Simple to use
+- Entirely Offline
 
 ## Recommended IDE Setup
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- VSCode + ESLint + Prettier
 
 ## Project Setup
 
@@ -23,7 +33,7 @@ $ npm run dev
 ### Build
 
 ```bash
-# For windows
+# For Windows
 $ npm run build:win
 
 # For macOS
