@@ -1,12 +1,18 @@
 import { Flip } from 'src/types/flip'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table'
 import { Input } from './ui/input'
-import AddFlipDialog from './AddFlipDialog'
 import { calculateProfit, getProfitColor } from '@renderer/util/profitUtil'
 import { useState } from 'react'
+import AddFlipDialog from './AddFlipDialog'
 import RemoveFlipDialog from './RemoveFlipDialog'
+import EditFlipDialog from './EditFlipDialog'
 
-function FlipTable({ flips, addFlipCallFunction, removeFlipCallFunction }): React.JSX.Element {
+function FlipTable({
+  flips,
+  addFlipCallFunction,
+  editFlipCallFunction,
+  removeFlipCallFunction
+}): React.JSX.Element {
   const [searchQuery, setSearchQuery] = useState('')
 
   function handleAddFlip(
@@ -97,6 +103,7 @@ function FlipTable({ flips, addFlipCallFunction, removeFlipCallFunction }): Reac
                 </TableCell>
                 <TableCell>{flip.created_at}</TableCell>
                 <TableCell className="text-right w-8">
+                  <EditFlipDialog flip={flip} callFunction={editFlipCallFunction} />
                   <RemoveFlipDialog callFunction={handleRemoveFlip} id={flip.flip_id} />
                 </TableCell>
               </TableRow>
