@@ -35,7 +35,7 @@ function RemoveFlipDialog({ id, callFunction }): React.JSX.Element {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction className="bg-red-600" onClick={handleDelete}>
+          <AlertDialogAction className="danger-button" onClick={handleDelete}>
             Continue
           </AlertDialogAction>
         </AlertDialogFooter>

@@ -162,3 +162,15 @@
     cursor: pointer;
   }
 }
+
+@layer components {
+  .danger-button {
+    background-color: oklch(57.7% 0.245 27.325) !important;
+    /* .dark foreground */
+    color: oklch(0.9288 0.0126 255.5078) !important;
+  }
+
+  .danger-button:hover {
+    background-color: oklch(54.7% 0.245 27.325) !important;
+  }
+}
