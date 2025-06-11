@@ -32,7 +32,19 @@ function AddFlipDialog({ callFunction }): React.JSX.Element {
     }))
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const handleOpenChange = (isOpen) => {
+    setOpen(isOpen)
+    if (!isOpen) {
+      setNewFlip({
+        name: '',
+        amount: '',
+        buyPrice: '',
+        sellPrice: '',
+        tax: ''
+      })
+    }
+  }
+
   function addFlip(event) {
     event.preventDefault()
     if (
@@ -64,7 +76,7 @@ function AddFlipDialog({ callFunction }): React.JSX.Element {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant={'default'}>
           <Plus /> Add Flip

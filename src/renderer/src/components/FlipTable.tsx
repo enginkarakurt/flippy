@@ -85,7 +85,7 @@ function FlipTable({
               <TableHead>Sell Price</TableHead>
               <TableHead>Tax</TableHead>
               <TableHead>Profit</TableHead>
-              <TableHead>Created</TableHead>
+              <TableHead>Created At</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -102,9 +102,11 @@ function FlipTable({
                   </span>
                 </TableCell>
                 <TableCell>{flip.created_at}</TableCell>
-                <TableCell className="text-right w-8">
-                  <EditFlipDialog flip={flip} callFunction={editFlipCallFunction} />
-                  <RemoveFlipDialog callFunction={handleRemoveFlip} id={flip.flip_id} />
+                <TableCell className="text-right min-w-fit w-48 max-w-fit">
+                  <div className="flex gap-2">
+                    <EditFlipDialog flip={flip} callFunction={editFlipCallFunction} />
+                    <RemoveFlipDialog callFunction={handleRemoveFlip} id={flip.flip_id} />
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
