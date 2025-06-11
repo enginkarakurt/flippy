@@ -3,7 +3,7 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const db = {
-  exec: (event, query) => ipcRenderer.invoke('db-exec', query),
+  exec: (_event, query: string) => ipcRenderer.invoke('db-exec', query),
   getFlips: () => ipcRenderer.invoke('db-get-flips')
 }
 

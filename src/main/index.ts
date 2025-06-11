@@ -73,7 +73,7 @@ app.whenReady().then(() => {
     'CREATE TABLE IF NOT EXISTS flips(flip_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, amount INTEGER NOT NULL, buy_price INTEGER NOT NULL, sell_price INTEGER NOT NULL, tax INTEGER, created_at TEXT NOT NULL);'
   )
 
-  ipcMain.handle('db-exec', (event, query) => executeDbQuery(query))
+  ipcMain.handle('db-exec', (_event, query) => executeDbQuery(query))
   ipcMain.handle('db-get-flips', getFlips)
 
   createWindow()
