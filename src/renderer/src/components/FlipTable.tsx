@@ -1,12 +1,18 @@
 import { Flip } from 'src/types/flip'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table'
 import { Input } from './ui/input'
-import AddFlipDialog from './AddFlipDialog'
 import { calculateProfit, getProfitColor } from '@renderer/util/profitUtil'
 import { useState } from 'react'
+import AddFlipDialog from './AddFlipDialog'
 import RemoveFlipDialog from './RemoveFlipDialog'
+import EditFlipDialog from './EditFlipDialog'
 
-function FlipTable({ flips, addFlipCallFunction, removeFlipCallFunction }): React.JSX.Element {
+function FlipTable({
+  flips,
+  addFlipCallFunction,
+  editFlipCallFunction,
+  removeFlipCallFunction
+}): React.JSX.Element {
   const [searchQuery, setSearchQuery] = useState('')
 
   function handleAddFlip(
@@ -73,18 +79,31 @@ function FlipTable({ flips, addFlipCallFunction, removeFlipCallFunction }): Reac
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead></TableHead>
               <TableHead>Item Name</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Buy Price</TableHead>
               <TableHead>Sell Price</TableHead>
               <TableHead>Tax</TableHead>
               <TableHead>Profit</TableHead>
-              <TableHead>Created</TableHead>
+              <TableHead>Created At</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredFlips.map((flip: Flip) => (
               <TableRow key={flip.flip_id}>
+                <TableCell>
+                  <img
+                    loading="lazy"
+                    width={24}
+                    height={24}
+                    src={
+                      'https://oldschool.runescape.wiki/images/' +
+                      flip.name.replace(' ', '_') +
+                      '.png?cache'
+                    }
+                  />
+                </TableCell>
                 <TableCell>{flip.name}</TableCell>
                 <TableCell>{flip.amount}</TableCell>
                 <TableCell>{flip.buy_price}</TableCell>
@@ -96,8 +115,11 @@ function FlipTable({ flips, addFlipCallFunction, removeFlipCallFunction }): Reac
                   </span>
                 </TableCell>
                 <TableCell>{flip.created_at}</TableCell>
-                <TableCell className="text-right w-8">
-                  <RemoveFlipDialog callFunction={handleRemoveFlip} id={flip.flip_id} />
+                <TableCell className="text-right min-w-fit w-48 max-w-fit">
+                  <div className="flex gap-2">
+                    <EditFlipDialog flip={flip} callFunction={editFlipCallFunction} />
+                    <RemoveFlipDialog callFunction={handleRemoveFlip} id={flip.flip_id} />
+                  </div>
                 </TableCell>
               </TableRow>
             ))}

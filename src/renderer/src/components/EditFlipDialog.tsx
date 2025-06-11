@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from './ui/button'
 import {
   Dialog,
@@ -11,10 +11,10 @@ import {
 } from './ui/dialog'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
-import { Plus } from 'lucide-react'
+import { Edit } from 'lucide-react'
 
-function AddFlipDialog({ callFunction }): React.JSX.Element {
-  const [newFlip, setNewFlip] = useState({
+function EditFlipDialog({ flip, callFunction }): React.JSX.Element {
+  const [editedFlip, setEditedFlip] = useState({
     name: '',
     amount: '',
     buyPrice: '',
@@ -24,69 +24,61 @@ function AddFlipDialog({ callFunction }): React.JSX.Element {
 
   const [open, setOpen] = useState(false)
 
+  useEffect(() => {
+    if (flip) {
+      setEditedFlip({
+        name: flip.name,
+        amount: flip.amount.toString(),
+        buyPrice: flip.buy_price.toString(),
+        sellPrice: flip.sell_price.toString(),
+        tax: flip.tax ? flip.tax.toString() : ''
+      })
+    }
+  }, [flip])
+
   const handleInputChange = (event) => {
     const { name, value } = event.target
-    setNewFlip((prevFlip) => ({
+    setEditedFlip((prevFlip) => ({
       ...prevFlip,
       [name]: value
     }))
   }
 
-  const handleOpenChange = (isOpen) => {
-    setOpen(isOpen)
-    if (!isOpen) {
-      setNewFlip({
-        name: '',
-        amount: '',
-        buyPrice: '',
-        sellPrice: '',
-        tax: ''
-      })
-    }
-  }
-
-  function addFlip(event) {
+  function editFlip(event) {
     event.preventDefault()
     if (
-      newFlip.name.trim() === '' ||
-      newFlip.amount === '' ||
-      newFlip.buyPrice === '' ||
-      newFlip.sellPrice === ''
+      editedFlip.name.trim() === '' ||
+      editedFlip.amount === '' ||
+      editedFlip.buyPrice === '' ||
+      editedFlip.sellPrice === ''
     ) {
       return
     }
 
     callFunction(
-      newFlip.name,
-      parseInt(newFlip.amount),
-      parseInt(newFlip.buyPrice),
-      parseInt(newFlip.sellPrice),
-      newFlip.tax ? parseInt(newFlip.tax) : undefined
+      flip.flip_id,
+      editedFlip.name,
+      parseInt(editedFlip.amount),
+      parseInt(editedFlip.buyPrice),
+      parseInt(editedFlip.sellPrice),
+      editedFlip.tax ? parseInt(editedFlip.tax) : undefined
     )
-
-    setNewFlip({
-      name: '',
-      amount: '',
-      buyPrice: '',
-      sellPrice: '',
-      tax: ''
-    })
 
     setOpen(false)
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={'default'}>
-          <Plus /> Add Flip
+        <Button variant={'outline'}>
+          <Edit /> Edit
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Flip</DialogTitle>
+          <DialogTitle>Edit Flip</DialogTitle>
         </DialogHeader>
-        <form onSubmit={addFlip}>
+        <form onSubmit={editFlip}>
           <div className="grid gap-4">
             <div className="grid gap-3">
               <Label htmlFor="name">Item Name</Label>
@@ -95,7 +87,7 @@ function AddFlipDialog({ callFunction }): React.JSX.Element {
                 name="name"
                 type="text"
                 required
-                value={newFlip.name}
+                value={editedFlip.name}
                 onChange={handleInputChange}
               />
             </div>
@@ -108,7 +100,7 @@ function AddFlipDialog({ callFunction }): React.JSX.Element {
                 min={1}
                 max={2147483647}
                 step={1}
-                value={newFlip.amount}
+                value={editedFlip.amount}
                 onChange={handleInputChange}
                 required
               />
@@ -122,7 +114,7 @@ function AddFlipDialog({ callFunction }): React.JSX.Element {
                 min={1}
                 max={2147483647}
                 step={1}
-                value={newFlip.buyPrice}
+                value={editedFlip.buyPrice}
                 onChange={handleInputChange}
                 required
               />
@@ -136,7 +128,7 @@ function AddFlipDialog({ callFunction }): React.JSX.Element {
                 min={1}
                 max={2147483647}
                 step={1}
-                value={newFlip.sellPrice}
+                value={editedFlip.sellPrice}
                 onChange={handleInputChange}
                 required
               />
@@ -150,7 +142,7 @@ function AddFlipDialog({ callFunction }): React.JSX.Element {
                 min={1}
                 max={2147483647}
                 step={1}
-                value={newFlip.tax}
+                value={editedFlip.tax}
                 onChange={handleInputChange}
               />
             </div>
@@ -159,7 +151,7 @@ function AddFlipDialog({ callFunction }): React.JSX.Element {
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit">Confirm</Button>
+            <Button type="submit">Save Changes</Button>
           </DialogFooter>
         </form>
       </DialogContent>
@@ -167,4 +159,4 @@ function AddFlipDialog({ callFunction }): React.JSX.Element {
   )
 }
 
-export default AddFlipDialog
+export default EditFlipDialog

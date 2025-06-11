@@ -10,7 +10,7 @@ A cross-plattform desktop app to track your flips in the game Old School RuneSca
 
 - Free forever
 - Simple to use
-- Entirely Offline
+- Local database
 
 ## Recommended IDE Setup
 

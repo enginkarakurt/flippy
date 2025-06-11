@@ -23,7 +23,6 @@ function App(): React.JSX.Element {
     sell_price: number,
     tax?: number
   ): Promise<void> {
-    console.log('Adding flip:', { name, amount, buy_price, sell_price, tax })
     const query = `INSERT INTO flips (name, amount, buy_price, sell_price, tax, created_at) VALUES ('${name}', ${amount}, ${buy_price}, ${sell_price}, ${tax || 'NULL'}, datetime('now', 'localtime'))`
     await window.db.exec(null, query)
     console.log('Flip added!')
@@ -31,9 +30,26 @@ function App(): React.JSX.Element {
     fetchFlips()
   }
 
+  async function handleEditFlip(
+    id: number,
+    name: string,
+    amount: number,
+    buy_price: number,
+    sell_price: number,
+    tax?: number
+  ): Promise<void> {
+    const query = `UPDATE flips SET name = '${name}', amount = ${amount}, buy_price = ${buy_price}, sell_price = ${sell_price}, tax = ${tax || 'NULL'} WHERE flip_id = ${id}`
+    await window.db.exec(null, query)
+    console.log('Flip updated!')
+
+    fetchFlips()
+  }
+
   async function handleRemoveFlip(id: number) {
     const deleteQuery = `DELETE FROM flips WHERE flip_id = ${id}`
     await window.db.exec(null, deleteQuery)
+    console.log('Flip removed!')
+
     fetchFlips()
   }
 
@@ -47,6 +63,7 @@ function App(): React.JSX.Element {
           <FlipTable
             flips={flips}
             addFlipCallFunction={handleAddFlip}
+            editFlipCallFunction={handleEditFlip}
             removeFlipCallFunction={handleRemoveFlip}
           />
         </section>
