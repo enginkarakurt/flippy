@@ -79,6 +79,7 @@ function FlipTable({
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead></TableHead>
               <TableHead>Item Name</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Buy Price</TableHead>
@@ -91,6 +92,18 @@ function FlipTable({
           <TableBody>
             {filteredFlips.map((flip: Flip) => (
               <TableRow key={flip.flip_id}>
+                <TableCell>
+                  <img
+                    loading="lazy"
+                    width={24}
+                    height={24}
+                    src={
+                      'https://oldschool.runescape.wiki/images/' +
+                      flip.name.replace(' ', '_') +
+                      '.png?cache'
+                    }
+                  />
+                </TableCell>
                 <TableCell>{flip.name}</TableCell>
                 <TableCell>{flip.amount}</TableCell>
                 <TableCell>{flip.buy_price}</TableCell>
