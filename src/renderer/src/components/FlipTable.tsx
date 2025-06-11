@@ -15,7 +15,7 @@ function FlipTable({ flips, addFlipCallFunction, removeFlipCallFunction }): Reac
     buy_price: number,
     sell_price: number,
     tax?: number
-  ): Promise<void> {
+  ): void {
     addFlipCallFunction(name, amount, buy_price, sell_price, tax ? tax : undefined)
   }
 
@@ -27,7 +27,7 @@ function FlipTable({ flips, addFlipCallFunction, removeFlipCallFunction }): Reac
     setSearchQuery(event.target.value)
   }
 
-  const filterFlips = (flips, query) => {
+  const filterFlips = (flips: Flip[], query: string) => {
     if (!query) return flips
 
     const lowercasedQuery = query.toLowerCase()
@@ -38,14 +38,14 @@ function FlipTable({ flips, addFlipCallFunction, removeFlipCallFunction }): Reac
       const [, operator, value] = profitFilterMatch
       const profitValue = parseFloat(value)
 
-      return flips.filter((flip) => {
+      return flips.filter((flip: Flip) => {
         const profit = calculateProfit(flip)
         return operator === '>' ? profit > profitValue : profit < profitValue
       })
     }
 
     // Otherwise, filter by name
-    return flips.filter((flip) => flip.name.toLowerCase().includes(lowercasedQuery))
+    return flips.filter((flip: Flip) => flip.name.toLowerCase().includes(lowercasedQuery))
   }
 
   const filteredFlips = filterFlips(flips, searchQuery)
@@ -56,51 +56,54 @@ function FlipTable({ flips, addFlipCallFunction, removeFlipCallFunction }): Reac
         <Input
           type="text"
           id="search"
-          placeholder="Search by name or profit > value or < value"
+          placeholder={
+            filteredFlips.length === 0
+              ? 'Searching will be available when you add a Flip'
+              : 'Search by name or profit > value or < value'
+          }
           value={searchQuery}
           onChange={handleSearchChange}
+          disabled={filteredFlips.length === 0 ? true : false}
         />
         <AddFlipDialog callFunction={handleAddFlip} />
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Item Name</TableHead>
-            <TableHead>Amount</TableHead>
-            <TableHead>Buy Price</TableHead>
-            <TableHead>Sell Price</TableHead>
-            <TableHead>Tax</TableHead>
-            <TableHead>Profit</TableHead>
-            <TableHead>Created</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredFlips.length === 0 ? (
-            <TableRow>No flips have been recorded yet!</TableRow>
-          ) : (
-            <>
-              {filteredFlips.map((flip: Flip) => (
-                <TableRow key={flip.flip_id}>
-                  <TableCell>{flip.name}</TableCell>
-                  <TableCell>{flip.amount}</TableCell>
-                  <TableCell>{flip.buy_price}</TableCell>
-                  <TableCell>{flip.sell_price}</TableCell>
-                  <TableCell>{flip.tax ? flip.tax : 'N/A'}</TableCell>
-                  <TableCell>
-                    <span className={getProfitColor(calculateProfit(flip), false)}>
-                      {calculateProfit(flip)}
-                    </span>
-                  </TableCell>
-                  <TableCell>{flip.created_at}</TableCell>
-                  <TableCell className="text-right w-8">
-                    <RemoveFlipDialog callFunction={handleRemoveFlip} id={flip.flip_id} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </>
-          )}
-        </TableBody>
-      </Table>
+      {filteredFlips.length === 0 ? (
+        <p className="text-center py-4">No flips have been recorded yet!</p>
+      ) : (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Item Name</TableHead>
+              <TableHead>Amount</TableHead>
+              <TableHead>Buy Price</TableHead>
+              <TableHead>Sell Price</TableHead>
+              <TableHead>Tax</TableHead>
+              <TableHead>Profit</TableHead>
+              <TableHead>Created</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredFlips.map((flip: Flip) => (
+              <TableRow key={flip.flip_id}>
+                <TableCell>{flip.name}</TableCell>
+                <TableCell>{flip.amount}</TableCell>
+                <TableCell>{flip.buy_price}</TableCell>
+                <TableCell>{flip.sell_price}</TableCell>
+                <TableCell>{flip.tax ? flip.tax : 'N/A'}</TableCell>
+                <TableCell>
+                  <span className={getProfitColor(calculateProfit(flip), false)}>
+                    {calculateProfit(flip)}
+                  </span>
+                </TableCell>
+                <TableCell>{flip.created_at}</TableCell>
+                <TableCell className="text-right w-8">
+                  <RemoveFlipDialog callFunction={handleRemoveFlip} id={flip.flip_id} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </>
   )
 }
