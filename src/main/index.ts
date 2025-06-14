@@ -75,6 +75,10 @@ app.whenReady().then(() => {
 
   ipcMain.handle('db-exec', (_event, query) => executeDbQuery(query))
   ipcMain.handle('db-get-flips', getFlips)
+  ipcMain.handle('restart-app', () => {
+    app.relaunch()
+    app.exit()
+  })
 
   createWindow()
 
