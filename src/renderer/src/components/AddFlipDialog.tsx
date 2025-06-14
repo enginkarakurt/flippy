@@ -1,17 +1,12 @@
-import { useState } from 'react'
-import { Button } from './ui/button'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from './ui/dialog'
-import { Input } from './ui/input'
+import { useCallback, useState } from 'react'
 import { Label } from './ui/label'
+import { Input } from './ui/input'
+import ItemSearchResults from './ItemSearchResults'
+import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogClose } from './ui/dialog'
+import { Item } from 'electron'
 import { Plus } from 'lucide-react'
+import { Button } from './ui/button'
+import { DialogHeader, DialogFooter } from './ui/dialog'
 
 function AddFlipDialog({ callFunction }): React.JSX.Element {
   const [newFlip, setNewFlip] = useState({
@@ -21,8 +16,40 @@ function AddFlipDialog({ callFunction }): React.JSX.Element {
     sellPrice: '',
     tax: ''
   })
-
   const [open, setOpen] = useState(false)
+  const [searchResults, setSearchResults] = useState([])
+  const [inputValue, setInputValue] = useState('')
+  const [showResults, setShowResults] = useState(true)
+
+  const data = Object.values(
+    JSON.parse(localStorage.getItem('bulkData') || '{}') as Record<number, Item>
+  )
+
+  function debounce(func, wait) {
+    let timeout
+
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout)
+        func(...args)
+      }
+
+      clearTimeout(timeout)
+      timeout = setTimeout(later, wait)
+    }
+  }
+
+  const filterData = useCallback(
+    (value) => {
+      const results = data.filter((item) => {
+        return value && item && item.name && item.name.toLowerCase().includes(value.toLowerCase())
+      })
+      setSearchResults(results)
+    },
+    [data]
+  )
+
+  const debouncedFilterData = debounce(filterData, 300)
 
   const handleInputChange = (event) => {
     const { name, value } = event.target
@@ -30,6 +57,22 @@ function AddFlipDialog({ callFunction }): React.JSX.Element {
       ...prevFlip,
       [name]: value
     }))
+  }
+
+  const handleItemNameChange = (event) => {
+    handleInputChange(event)
+    setInputValue(event.target.value)
+    setShowResults(true) // Show results when typing
+    debouncedFilterData(event.target.value)
+  }
+
+  const handleItemClick = (name: string) => {
+    setInputValue(name)
+    setNewFlip((prevFlip) => ({
+      ...prevFlip,
+      name: name
+    }))
+    setShowResults(false) // Hide results when an item is clicked
   }
 
   const handleOpenChange = (isOpen) => {
@@ -42,10 +85,12 @@ function AddFlipDialog({ callFunction }): React.JSX.Element {
         sellPrice: '',
         tax: ''
       })
+      setInputValue('')
+      setShowResults(false)
     }
   }
 
-  function addFlip(event) {
+  function addFlip(event): void {
     event.preventDefault()
     if (
       newFlip.name.trim() === '' ||
@@ -90,14 +135,21 @@ function AddFlipDialog({ callFunction }): React.JSX.Element {
           <div className="grid gap-4">
             <div className="grid gap-3">
               <Label htmlFor="name">Item Name</Label>
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                required
-                value={newFlip.name}
-                onChange={handleInputChange}
-              />
+              <div className="relative">
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  required
+                  value={newFlip.name && inputValue}
+                  onChange={handleItemNameChange}
+                />
+                <ItemSearchResults
+                  results={searchResults}
+                  setInputValue={handleItemClick}
+                  showResults={showResults}
+                />
+              </div>
             </div>
             <div className="grid gap-3">
               <Label htmlFor="amount">Amount</Label>

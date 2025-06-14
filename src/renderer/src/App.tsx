@@ -16,6 +16,25 @@ function App(): React.JSX.Element {
     fetchFlips()
   }, [])
 
+  useEffect(() => {
+    async function fetchData(): Promise<void> {
+      try {
+        const data = await fetch('https://chisel.weirdgloop.org/gazproj/gazbot/os_dump.json')
+
+        if (!data.ok) {
+          throw new Error(`Response status: ${data.status}`)
+        }
+
+        const json = await data.json()
+        localStorage.setItem('bulkData', JSON.stringify(json))
+      } catch (error: any) {
+        console.error(error.message)
+      }
+    }
+
+    fetchData()
+  }, [])
+
   async function handleAddFlip(
     name: string,
     amount: number,
@@ -45,7 +64,7 @@ function App(): React.JSX.Element {
     fetchFlips()
   }
 
-  async function handleRemoveFlip(id: number) {
+  async function handleRemoveFlip(id: number): Promise<void> {
     const deleteQuery = `DELETE FROM flips WHERE flip_id = ${id}`
     await window.db.exec(null, deleteQuery)
     console.log('Flip removed!')
