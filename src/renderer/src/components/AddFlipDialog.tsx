@@ -68,6 +68,10 @@ function AddFlipDialog({ callFunction }): React.JSX.Element {
 
   const handleItemClick = (name: string) => {
     setInputValue(name)
+    setNewFlip((prevFlip) => ({
+      ...prevFlip,
+      name: name
+    }))
     setShowResults(false) // Hide results when an item is clicked
   }
 

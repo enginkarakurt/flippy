@@ -69,7 +69,7 @@ function EditFlipDialog({ flip, callFunction }) {
     debouncedFilterData(event.target.value)
   }
 
-  const handleItemClick = (name) => {
+  const handleItemClick = (name: string) => {
     setInputValue(name)
     setEditedFlip((prevFlip) => ({
       ...prevFlip,
