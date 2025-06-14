@@ -3,9 +3,11 @@ import FlipTable from './components/FlipTable'
 import Statistics from './components/Statistics'
 import Header from './components/Header'
 import ThemeProvider from './components/theme-provider'
+import SetupDialog from './components/SetupDialog'
 
 function App(): React.JSX.Element {
   const [flips, setFlips] = useState([])
+  const [showSetupDialog, setShowSetupDialog] = useState(false)
 
   async function fetchFlips(): Promise<void> {
     const flipsData = await window.db.getFlips()
@@ -26,7 +28,13 @@ function App(): React.JSX.Element {
         }
 
         const json = await data.json()
-        localStorage.setItem('bulkData', JSON.stringify(json))
+
+        if (localStorage.getItem('bulkData') === null) {
+          localStorage.setItem('bulkData', JSON.stringify(json))
+          setShowSetupDialog(true)
+        } else {
+          localStorage.setItem('bulkData', JSON.stringify(json))
+        }
       } catch (error: any) {
         console.error(error.message)
       }
@@ -87,6 +95,7 @@ function App(): React.JSX.Element {
           />
         </section>
       </main>
+      {showSetupDialog && <SetupDialog />}
     </ThemeProvider>
   )
 }
