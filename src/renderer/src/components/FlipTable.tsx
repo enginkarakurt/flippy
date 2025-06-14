@@ -2,7 +2,7 @@ import { Flip } from 'src/types/flip'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table'
 import { Input } from './ui/input'
 import { calculateProfit, getProfitColor } from '@renderer/util/profitUtil'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import AddFlipDialog from './AddFlipDialog'
 import RemoveFlipDialog from './RemoveFlipDialog'
 import EditFlipDialog from './EditFlipDialog'
@@ -14,6 +14,13 @@ function FlipTable({
   removeFlipCallFunction
 }): React.JSX.Element {
   const [searchQuery, setSearchQuery] = useState('')
+  const [bulkData, setBulkData] = useState<Record<number, Item>>({})
+
+  useEffect(() => {
+    // Retrieve the bulk data from localStorage
+    const data = JSON.parse(localStorage.getItem('bulkData') || '{}')
+    setBulkData(data)
+  }, [])
 
   function handleAddFlip(
     name: string,
@@ -25,7 +32,7 @@ function FlipTable({
     addFlipCallFunction(name, amount, buy_price, sell_price, tax ? tax : undefined)
   }
 
-  function handleRemoveFlip(id: number) {
+  function handleRemoveFlip(id: number): void {
     removeFlipCallFunction(id)
   }
 
@@ -55,6 +62,16 @@ function FlipTable({
   }
 
   const filteredFlips = filterFlips(flips, searchQuery)
+
+  const getIconUrl = (name: string): string => {
+    const item = Object.values(bulkData).find((item: Item) => item.name === name)
+    if (item && item.icon) {
+      const regExSpace = new RegExp(' ', 'g')
+      const regExAnd = new RegExp('&amp;', 'g')
+      return `https://oldschool.runescape.wiki/images/${item.icon.replace(regExSpace, '_').replace(regExAnd, '&')}`
+    }
+    return ''
+  }
 
   return (
     <>
@@ -97,11 +114,8 @@ function FlipTable({
                     loading="lazy"
                     width={24}
                     height={24}
-                    src={
-                      'https://oldschool.runescape.wiki/images/' +
-                      flip.name.replace(' ', '_') +
-                      '.png?cache'
-                    }
+                    src={getIconUrl(flip.name)}
+                    alt={flip.name}
                   />
                 </TableCell>
                 <TableCell>{flip.name}</TableCell>

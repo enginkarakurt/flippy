@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from './ui/button'
 import {
   Dialog,
@@ -12,29 +12,47 @@ import {
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 import { Edit } from 'lucide-react'
+import ItemSearchResults from './ItemSearchResults'
 
-function EditFlipDialog({ flip, callFunction }): React.JSX.Element {
+function EditFlipDialog({ flip, callFunction }) {
   const [editedFlip, setEditedFlip] = useState({
-    name: '',
-    amount: '',
-    buyPrice: '',
-    sellPrice: '',
-    tax: ''
+    name: flip.name,
+    amount: flip.amount.toString(),
+    buyPrice: flip.buy_price.toString(),
+    sellPrice: flip.sell_price.toString(),
+    tax: flip.tax ? flip.tax.toString() : ''
   })
 
   const [open, setOpen] = useState(false)
+  const [searchResults, setSearchResults] = useState([])
+  const [inputValue, setInputValue] = useState(flip.name)
+  const [showResults, setShowResults] = useState(true)
 
-  useEffect(() => {
-    if (flip) {
-      setEditedFlip({
-        name: flip.name,
-        amount: flip.amount.toString(),
-        buyPrice: flip.buy_price.toString(),
-        sellPrice: flip.sell_price.toString(),
-        tax: flip.tax ? flip.tax.toString() : ''
-      })
+  const data = Object.values(JSON.parse(localStorage.getItem('bulkData') || '{}'))
+
+  const debounce = (func, wait) => {
+    let timeout
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout)
+        func(...args)
+      }
+      clearTimeout(timeout)
+      timeout = setTimeout(later, wait)
     }
-  }, [flip])
+  }
+
+  const filterData = useCallback(
+    (value) => {
+      const results = data.filter((item) => {
+        return value && item && item.name && item.name.toLowerCase().includes(value.toLowerCase())
+      })
+      setSearchResults(results)
+    },
+    [data]
+  )
+
+  const debouncedFilterData = debounce(filterData, 300)
 
   const handleInputChange = (event) => {
     const { name, value } = event.target
@@ -42,6 +60,38 @@ function EditFlipDialog({ flip, callFunction }): React.JSX.Element {
       ...prevFlip,
       [name]: value
     }))
+  }
+
+  const handleItemNameChange = (event) => {
+    handleInputChange(event)
+    setInputValue(event.target.value)
+    setShowResults(true)
+    debouncedFilterData(event.target.value)
+  }
+
+  const handleItemClick = (name) => {
+    setInputValue(name)
+    setEditedFlip((prevFlip) => ({
+      ...prevFlip,
+      name: name
+    }))
+    setShowResults(false)
+  }
+
+  const handleOpenChange = (isOpen) => {
+    setOpen(isOpen)
+    if (!isOpen) {
+      // Reset form state to original flip values when dialog is closed
+      setEditedFlip({
+        name: flip.name,
+        amount: flip.amount.toString(),
+        buyPrice: flip.buy_price.toString(),
+        sellPrice: flip.sell_price.toString(),
+        tax: flip.tax ? flip.tax.toString() : ''
+      })
+      setInputValue(flip.name)
+      setShowResults(false)
+    }
   }
 
   function editFlip(event) {
@@ -68,7 +118,7 @@ function EditFlipDialog({ flip, callFunction }): React.JSX.Element {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant={'outline'}>
           <Edit /> Edit
@@ -82,14 +132,21 @@ function EditFlipDialog({ flip, callFunction }): React.JSX.Element {
           <div className="grid gap-4">
             <div className="grid gap-3">
               <Label htmlFor="name">Item Name</Label>
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                required
-                value={editedFlip.name}
-                onChange={handleInputChange}
-              />
+              <div className="relative">
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  required
+                  value={inputValue}
+                  onChange={handleItemNameChange}
+                />
+                <ItemSearchResults
+                  results={searchResults}
+                  setInputValue={handleItemClick}
+                  showResults={showResults}
+                />
+              </div>
             </div>
             <div className="grid gap-3">
               <Label htmlFor="amount">Amount</Label>
