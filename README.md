@@ -13,11 +13,9 @@ A cross-plattform desktop app to track your flips in the game Old School RuneSca
 
 ## Screenshots
 
-<p float="left">
-  <img src="resources/mainPage.png" alt="Screenshot showcasing the main page" width="33%" />
-  <img src="resources/addFlip.png" alt="Screenshot showcasing adding a flip" width="33%" />
-  <img src="resources/searchItems.png" alt="Screenshot showcasing searching through items using wiki data" width="33%" />
-</p>
+![Screenshot showcasing the main page](resources/mainPage.png)
+![Screenshot showcasing adding a flip](resources/addFlip.png)
+![Screenshot showcasing searching through items using wiki data](resources/searchItems.png)
 
 ## Recommended IDE Setup
 
