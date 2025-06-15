@@ -1,6 +1,6 @@
 # Flippy
 
-A cross-plattform desktop app to track your flips in the game Old School RuneScape. Built with Electron, React+shadcn/ui and SQLite.
+A cross-plattform desktop app to track your flips in the game Old School RuneScape. Built with Electron, React+Tailwind+shadcn/ui and SQLite.
 
 [Download now!](https://github.com/enginkarakurt/flippy/releases/latest)
 
@@ -27,7 +27,7 @@ Searching through items using wiki data:
 
 ## Recommended IDE Setup
 
-- VSCode + ESLint + Prettier
+- VSCode + ESLint + Prettier + Tailwind CSS IntelliSense
 
 ## Project Setup
 
