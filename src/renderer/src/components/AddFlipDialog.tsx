@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useCallback, useState } from 'react'
 import { Label } from './ui/label'
 import { Input } from './ui/input'
@@ -26,10 +27,10 @@ function AddFlipDialog({ callFunction }): React.JSX.Element {
   )
 
   function debounce(func, wait) {
-    let timeout
+    let timeout: string | number | NodeJS.Timeout | undefined
 
     return function executedFunction(...args) {
-      const later = () => {
+      function later(): void {
         clearTimeout(timeout)
         func(...args)
       }
@@ -40,7 +41,7 @@ function AddFlipDialog({ callFunction }): React.JSX.Element {
   }
 
   const filterData = useCallback(
-    (value) => {
+    (value: string) => {
       const results = data.filter((item) => {
         return value && item && item.name && item.name.toLowerCase().includes(value.toLowerCase())
       })

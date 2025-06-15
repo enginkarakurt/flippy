@@ -17,13 +17,13 @@ function SetupDialog(): React.JSX.Element {
     <AlertDialog open={true}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Welcome!</AlertDialogTitle>
+          <AlertDialogTitle>Restart needed</AlertDialogTitle>
           <AlertDialogDescription>
-            Restart the App to finish the inital setup!
+            Restart the app to finish setting up the wiki data!
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogAction onClick={restart}>Okay!</AlertDialogAction>
+          <AlertDialogAction onClick={restart}>Okay</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
