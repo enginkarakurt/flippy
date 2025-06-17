@@ -4,6 +4,24 @@ A cross-plattform desktop app to track your flips in the game Old School RuneSca
 
 [Download now!](https://github.com/enginkarakurt/flippy/releases/latest)
 
+## Table of contents
+
+- [Support Me](#support-me)
+
+- [Features](#features)
+
+- [Screenshots](#screenshots)
+
+- [Project Setup](#project-setup)
+
+## Support Me
+
+I deeply appreciate any support! :)
+
+[Buy Me a Coffee!](coff.ee/enginkarakurt)
+
+<img src="resources/bmc_qr.png" alt="Buy Me a Coffee QR Code" width="192px">
+
 ## Features
 
 - Free forever
@@ -25,11 +43,11 @@ Searching through items using wiki data:
 
 <img src="resources/searchItems.png" alt="Screenshot showcasing searching through items using wiki data" width="60%">
 
-## Recommended IDE Setup
+## Project Setup
+
+### Recommended IDE Setup
 
 - VSCode + ESLint + Prettier + Tailwind CSS IntelliSense
-
-## Project Setup
 
 ### Install
 
