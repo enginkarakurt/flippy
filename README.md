@@ -6,21 +6,11 @@ A cross-plattform desktop app to track your flips in the game Old School RuneSca
 
 ## Table of contents
 
-- [Support Me](#support-me)
-
 - [Features](#features)
 
 - [Screenshots](#screenshots)
 
 - [Project Setup](#project-setup)
-
-## Support Me
-
-I deeply appreciate any support! :)
-
-[Buy Me a Coffee!](https://coff.ee/enginkarakurt)
-
-<img src="resources/bmc_qr.png" alt="Buy Me a Coffee QR Code" width="192px">
 
 ## Features
 
